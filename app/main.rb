@@ -37,7 +37,20 @@ def order_by_reps
     other_format[key.first] ||= {}
     other_format[key.first][key.second] = value
   end
-  other_format
+  final_array = []
+  other_format.each do |x|
+    if x[1]['Rep'] != nil
+   final_array << [x[0],x[1]['Rep'],x[1]['Sen']]
+    else
+      x[1]['Rep'] = 0
+      x[1]['Sen'] = 0
+      final_array << [x[0],x[1]['Rep'],x[1]['Sen']]
+    end
+  end
+  true_final_array = final_array.sort_by{|k|k[1]}.reverse
+  true_final_array.each do |state_array|
+    puts "#{state_array[0]}: #{state_array[2]} Senators, #{state_array[1]} Representatives"
+  end
 end
 
 def count_congress
@@ -47,12 +60,10 @@ def count_congress
   puts "Representatives: #{rep_count}"
 end
 
-# def print_states
-# states = Legislator.select(:state).uniq
-# states_array = []
-# states.each {|x| states_array << x.state}
-# states_array.each do |state|
-#   puts "#{state}: #{} "
-# end
+def delete_congress
+  Legislator.where("in_office = 0").destroy_all
+end
 
-p order_by_reps
+count_congress
+delete_congress
+count_congress
