@@ -35,6 +35,11 @@ task "db:version" do
   puts "Current version: #{ActiveRecord::Migrator.current_version}"
 end
 
+desc 'Open a console session with the app loaded'
+task "console" do
+  exec "irb -r./db/config -r./app/models/legislator"
+end
+
 desc "Run the specs"
 RSpec::Core::RakeTask.new(:specs)
 
